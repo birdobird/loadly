@@ -1,0 +1,68 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* === MOTYW JASNY (LOADLY) === */
+@theme inline {
+  --color-bg: #efeee7;
+  --color-bg-card: #ffffff;
+  --color-border: #dcd9d2;
+  --color-accent: #8aad7d;
+  --color-accent-hover: #769b69;
+  --color-text: #1a1a1a;
+  --color-text-muted: #4b4b4b;
+  --font-sans: "Geist Sans", "Inter", system-ui, sans-serif;
+  --radius: 0.75rem;
+}
+
+/* === GLOBALNE STYLY === */
+@layer base {
+  * {
+    @apply box-border transition-all duration-200;
+  }
+
+  html,
+  body {
+    @apply min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-semibold tracking-tight text-balance;
+  }
+
+  p {
+    @apply text-[var(--color-text-muted)];
+  }
+
+  a {
+    @apply text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] transition-colors;
+  }
+
+  input,
+  textarea {
+    @apply w-full px-4 py-3 rounded-[var(--radius)] border border-[var(--color-border)] 
+           bg-white text-[var(--color-text)] placeholder-[var(--color-text-muted)]
+           focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] outline-none;
+  }
+
+  button {
+    @apply px-5 py-2.5 font-medium rounded-[var(--radius)] 
+           bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]
+           active:scale-[0.98] shadow-[0_4px_15px_rgba(138,173,125,0.25)] transition-all;
+  }
+
+  .card {
+    @apply bg-[var(--color-bg-card)] border border-[var(--color-border)] 
+           rounded-[var(--radius)] p-6 shadow-sm hover:shadow-md transition-all;
+  }
+
+  nav {
+    @apply sticky top-0 bg-white/80 backdrop-blur-lg border-b border-[var(--color-border)]
+           flex items-center justify-between px-10 py-4 z-50;
+  }
+
+  main {
+    @apply max-w-3xl mx-auto py-20 px-6 space-y-16;
+  }
+}
