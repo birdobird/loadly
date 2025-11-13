@@ -16,10 +16,6 @@
 
 /* === GLOBALNE STYLY === */
 @layer base {
-  * {
-    @apply box-border transition-all duration-200;
-  }
-
   html,
   body {
     @apply min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] font-sans antialiased;
@@ -49,7 +45,7 @@
   button {
     @apply px-5 py-2.5 font-medium rounded-[var(--radius)] 
            bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]
-           active:scale-[0.98] shadow-[0_4px_15px_rgba(138,173,125,0.25)] transition-all;
+           active:scale-[0.98] shadow-[0_4px_15px_rgba(138,173,125,0.25)] transition-all cursor-pointer;
   }
 
   .card {
@@ -65,4 +61,62 @@
   main {
     @apply max-w-3xl mx-auto py-20 px-6 space-y-16;
   }
+}
+
+/* === SHADCN FIX: SWITCH w motywie Loadly === */
+/* Switch Root (tło) */
+.switch-root,
+button[role="switch"] {
+  @apply relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full 
+         border-2 transition-all duration-200 ease-in-out;
+  background: #d1d1d1;
+  border-color: #b8b8b8;
+}
+
+.switch-root[data-state="checked"],
+button[role="switch"][data-state="checked"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(138, 173, 125, 0.4);
+}
+
+/* Switch Thumb (kółko) */
+.switch-root > span,
+button[role="switch"] > span {
+  @apply pointer-events-none block h-5 w-5 rounded-full 
+         ring-0 transition-all duration-200 ease-in-out;
+  background: white;
+  transform: translateX(-12px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.switch-root[data-state="checked"] > span,
+button[role="switch"][data-state="checked"] > span {
+  transform: translateX(12px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* === Label === */
+.ui-label {
+  @apply text-[var(--color-text)] font-medium ml-2;
+}
+
+/* === Select === */
+.select-trigger {
+  @apply flex h-11 w-full items-center justify-between rounded-[var(--radius)]
+         border border-[var(--color-border)] bg-white px-4 py-2 text-[var(--color-text)]
+         hover:border-[var(--color-accent)] transition;
+}
+
+.select-trigger:focus {
+  @apply ring-2 ring-[var(--color-accent)] border-[var(--color-accent)];
+}
+
+.select-content {
+  @apply bg-white border border-[var(--color-border)] rounded-[var(--radius)]
+         shadow-lg;
+}
+
+.select-item {
+  @apply px-4 py-2 cursor-pointer text-[var(--color-text)] hover:bg-[var(--color-bg)];
 }

@@ -1,119 +1,259 @@
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
 import * as cheerio from "cheerio";
+import { GoogleGenAI } from "@google/genai";
+import { findProductImage } from "@/lib/scrape-image";
+import { findStoreLogo } from "@/lib/scrape-logo";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY!,
 });
+
+// zamiana URLa obrazka na inlineData dla Gemini
+async function inline(url: string) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Nie udało się pobrać obrazu: ${url}`);
+  const buf = Buffer.from(await res.arrayBuffer());
+
+  return {
+    inlineData: {
+      mimeType: res.headers.get("content-type") || "image/png",
+      data: buf.toString("base64"),
+    },
+  };
+}
+
+// wyciągnięcie inlineData z odpowiedzi Gemini
+function extractImage(resp: any): string | null {
+  const parts = resp.candidates?.[0]?.content?.parts ?? resp.parts ?? [];
+
+  const img = parts.find((p: any) => p.inlineData && p.inlineData.data);
+  if (!img) return null;
+
+  return `data:${img.inlineData.mimeType};base64,${img.inlineData.data}`;
+}
+
+// ##############################################################
 
 export async function POST(req: NextRequest) {
   try {
-    const { url } = await req.json();
+    const body = await req.json();
 
-    if (!url) {
-      return NextResponse.json({ error: "Brak URL produktu" }, { status: 400 });
+    const url: string | undefined = body.url;
+    const imageUrl: string | undefined = body.imageUrl;
+    const withHuman: boolean = body.withHuman ?? true;
+    const extraText: string = body.extraText ?? "";
+    const useLogo: boolean = body.useLogo ?? true;
+    const stylePref: string | undefined = body.style; // np. "lifestyle" / "studio"
+
+    if (!url && !imageUrl) {
+      return NextResponse.json(
+        { error: "Brak URL produktu lub URL zdjęcia" },
+        { status: 400 }
+      );
     }
 
-    console.log("🔍 Fetching product page:", url);
+    let title = "Produkt";
+    let description = "";
+    let productImage = imageUrl || "";
 
-    const page = await fetch(url, {
-      headers: { "User-Agent": "Mozilla/5.0" },
-    });
+    // ---------- SCRAPING ----------
+    if (url) {
+      const page = await fetch(url, {
+        headers: { "User-Agent": "Mozilla/5.0 (LoadlyBot/1.0)" },
+      }).catch(() => null);
 
-    const html = await page.text();
-    const $ = cheerio.load(html);
+      if (page) {
+        const html = await page.text();
+        const $ = cheerio.load(html);
 
-    const title =
-      $('meta[property="og:title"]').attr("content") ||
-      $("h1").first().text() ||
-      $("title").text() ||
-      "Produkt";
+        title =
+          $('meta[property="og:title"]').attr("content") ||
+          $("h1").first().text() ||
+          $("title").text() ||
+          "Produkt";
 
-    const description =
-      $('meta[property="og:description"]').attr("content") ||
-      $('meta[name="description"]').attr("content") ||
-      "";
+        description =
+          $('meta[property="og:description"]').attr("content") ||
+          $('meta[name="description"]').attr("content") ||
+          "";
+      }
 
-    let img =
-      $('meta[property="og:image"]').attr("content") ||
-      $("img").first().attr("src") ||
-      "";
-
-    if (img && !img.startsWith("http")) {
-      const base = new URL(url);
-      img = `${base.origin}${img.startsWith("/") ? img : "/" + img}`;
+      if (!productImage) {
+        productImage = (await findProductImage(url)) || "";
+      }
     }
 
-    console.log("📦 Extracted product:", { title, description, img });
-
-    // --------------------------------------------
-    // 1) GENERATE AD COPY
-    // --------------------------------------------
-    const adCopy = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
+    if (!productImage) {
+      return NextResponse.json(
         {
-          role: "system",
-          content:
-            "Jesteś ekspertem od pisania reklam na Instagram/Facebook w języku polskim.",
+          error:
+            "Nie udało się znaleźć zdjęcia produktu. Podaj URL zdjęcia ręcznie.",
         },
-        {
-          role: "user",
-          content: `
-Napisz:
-1. Nagłówek (max 40 znaków)
-2. Tekst posta (max 150 znaków, dynamiczny, emocjonalny)
+        { status: 400 }
+      );
+    }
+
+    // logo sklepu – tylko jeśli user pozwolił
+    let storeLogo: string | null = null;
+    if (useLogo && url) {
+      storeLogo = await findStoreLogo(url);
+    }
+
+    const [productInline, logoInlineResult] = await Promise.all([
+      inline(productImage),
+      storeLogo ? inline(storeLogo) : Promise.resolve(null),
+    ]);
+
+    const logoInline = logoInlineResult;
+
+    // ---------- STYLE PRESETY ----------
+    const styleMap: Record<"A" | "B", string> = {
+      A:
+        stylePref === "studio"
+          ? "clean studio light, soft shadows, ecommerce look"
+          : "bright travel lifestyle, soft natural light, instagram style",
+      B:
+        stylePref === "studio"
+          ? "dark premium studio, gradient background, high contrast"
+          : "urban night cinematic, subtle neon lights, tiktok ad look",
+    };
+
+    const variants: any = {};
+
+    // ---------- GENERACJA A / B ----------
+    await Promise.all(
+      (["A", "B"] as const).map(async (key) => {
+        // 1) COPY – tylko nagłówek + caption (bez wciskania extraText na obraz)
+        const textPrompt = `
+Jesteś ekspertem od reklam performance (Meta / Instagram / TikTok).
 
 Produkt:
-Tytuł: ${title}
-Opis: ${description}
-          `,
-        },
-      ],
-    });
+- Tytuł: ${title}
+- Opis: ${description}
 
-    const copy = adCopy.choices[0].message?.content || "";
-    console.log("📝 Generated copy:", copy);
+Kontekst kampanii (użyj jako inspiracji tonu i klimatu):
+"${extraText || "brak dodatkowego kontekstu"}"
 
-    const [headline, text] = copy.split("\n").map((s) => s.replace(/^[0-9\.\- ]+/g, ""));
+Zwróć DOKŁADNIE jeden obiekt JSON:
 
-    // --------------------------------------------
-    // 2) GENERATE AD IMAGE (GOTOWY POST)
-    // --------------------------------------------
-    const imagePrompt = `
-Create a professional square social media ad.
-Product: ${title}
-Description: ${description}
-Style: modern, minimalist, aesthetic, clean, high-converting.
-Use product image: ${img}
-Bright colors, strong contrast, premium look.
+{
+  "headline": "krótki, mocny nagłówek (max 30 znaków, po polsku)",
+  "caption": "dynamiczny tekst posta (max 120 znaków, po polsku)"
+}
+`.trim();
+
+        const txtRes = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{ parts: [{ text: textPrompt }] }],
+        });
+
+        const rawText: string =
+          (txtRes as any).text ??
+          txtRes.candidates?.[0]?.content?.parts
+            ?.map((p: any) => p.text || "")
+            .join("\n") ??
+          "{}";
+
+        let headline = title;
+        let caption = description;
+
+        try {
+          const parsed = JSON.parse(
+            rawText.replace(/```json/gi, "").replace(/```/g, "")
+          );
+          if (parsed.headline) headline = parsed.headline;
+          if (parsed.caption) caption = parsed.caption;
+        } catch {
+          // zostaw fallback
+        }
+
+        // 2) IMAGE PROMPT
+        const personRule = withHuman
+          ? `
+PERSON:
+- Pokaż prawdziwą osobę.
+- Jeśli produkt to odzież/obuwie/plecak/torba/biżuteria — można go naturalnie nosić.
+- Jeśli produkt NIE jest przeznaczony do noszenia (np. organizer, etui, gadżet, poduszka) — osoba NIE dotyka produktu. Leży obok na powierzchni.
+- Jeśli produkt ma paski/rzepy, ale nie jest odzieżą — NIE zakładać na ciało.
+- Scena realistyczna, naturalne oświetlenie.
+`
+          : `
+NO PERSON:
+- Zero ludzi, twarzy, rąk, sylwetek.
+- Produkt sam w realistycznym otoczeniu.
 `;
 
-    const imageRes = await openai.images.generate({
-      model: "gpt-image-1",
-      prompt: imagePrompt,
-      size: "1024x1024",
-    });
+        const logoRule = logoInline
+          ? `
+LOGO:
+- Dodaj logo w lewym dolnym rogu, bez zmian i bez modyfikacji.
+`
+          : `
+LOGO:
+- Nie dodawaj żadnego logo.
+`;
 
-    const adImage = imageRes.data?.[0].url;
+        const imgPrompt = `
+Create a realistic vertical 9:16 advertisement.
 
-    console.log("🎨 Generated ad image:", adImage);
+PRODUCT RULES:
+- Use the provided product photo EXACTLY as it is (no redesign, recolor, smoothing, morphing).
+- Keep original proportions, geometry, materials, stitching, labels.
+- NEVER place the product on the person’s lap, legs, hands, or body unless it is a naturally wearable item.
+- If the product is a travel neck pillow: it may ONLY be worn on the neck or placed on a surface (seat, table, luggage).
+
+PERSON RULES:
+${personRule}
+
+SCENE:
+- Realistic, photographic environment.
+- High-quality lighting.
+- Maintain clear visibility of the product.
+- Style preset: ${styleMap[key]}
+
+TEXT:
+- Show only the headline: "${headline}"
+- Add small CTA at bottom: "Zamów teraz"
+- Do NOT show the caption.
+- No extra text.
+
+LOGO:
+${logoRule}
+
+Marketing context (DO NOT render as text):
+"${extraText || "no additional context"}"
+`.trim();
+
+        const parts: any[] = [{ text: imgPrompt }, productInline];
+        if (logoInline) parts.push(logoInline);
+
+        const imgRes = await ai.models.generateContent({
+          model: "gemini-2.5-flash-image",
+          contents: [{ parts }],
+          config: {
+            responseModalities: ["IMAGE"],
+            imageConfig: { aspectRatio: "9:16" },
+          },
+        });
+
+        const image = extractImage(imgRes);
+        variants[key] = {
+          image,
+          headline,
+          caption, // to będzie opis posta, NIE tekst na obrazku
+        };
+      })
+    );
 
     return NextResponse.json({
       ok: true,
-      headline,
-      text,
-      image: adImage,
-      title,
-      description,
+      variants,
+      infoMessage: "Wygenerowano 2 warianty A/B z blokadą zmiany produktu",
     });
   } catch (err) {
-    console.error("❌ Error generating ad:", err);
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "unknown" },
-      { status: 500 }
-    );
+    console.error("❌ ERROR /api/generate", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

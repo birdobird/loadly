@@ -1,43 +1,35 @@
 import * as cheerio from "cheerio";
 
-
 export async function findProductImage(url: string): Promise<string | null> {
   try {
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; LoadlyBot/1.0)" },
     });
     if (!res.ok) return null;
+
     const html = await res.text();
     const $ = cheerio.load(html);
 
-    const meta = $(
-      'meta[property="og:image"], meta[name="twitter:image"]'
-    ).attr("content");
-    if (meta && !isLogo(meta)) return absoluteUrl(url, meta);
-
-    const imgs = $("img")
+    let imgs = $("img")
       .map((_, el) => $(el).attr("src") || "")
       .get()
       .filter(Boolean)
       .map((src) => absoluteUrl(url, src))
-      .filter((src) => !isLogo(src) && isImage(src));
+      .filter((src) => isImage(src) && !isLogo(src));
 
-    const candidates = imgs.filter((src) =>
-      /product|item|photo|pack|sku|gallery|main/i.test(src)
-    );
+    if (imgs.length === 0) return null;
 
-    if (candidates.length > 0) return candidates[0];
-    if (imgs.length > 0) return imgs[0];
+    // WEBP ZAWSZE PRIORITY
+    imgs = sortImages(imgs);
 
-    return null;
-  } catch (err) {
-    console.error("findProductImage error:", err);
+    return imgs[0];
+  } catch {
     return null;
   }
 }
 
 function isLogo(url: string) {
-  return /logo|icon|favicon|sprite|banner|header|brand/i.test(url);
+  return /logo|favicon|sprite|icon|banner|header|brand/i.test(url);
 }
 
 function isImage(url: string) {
@@ -50,4 +42,21 @@ function absoluteUrl(base: string, relative: string) {
   } catch {
     return relative;
   }
+}
+
+// WEBP FIRST + LARGEST
+function sortImages(list: string[]) {
+  return list.sort((a, b) => {
+    const aw = a.endsWith(".webp");
+    const bw = b.endsWith(".webp");
+    if (aw && !bw) return -1;
+    if (!aw && bw) return 1;
+    return extractSize(b) - extractSize(a);
+  });
+}
+
+function extractSize(url: string) {
+  const match = url.match(/(\d{3,4})[x_](\d{3,4})/);
+  if (!match) return 0;
+  return parseInt(match[1]) * parseInt(match[2]);
 }
