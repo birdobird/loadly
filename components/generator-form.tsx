@@ -44,8 +44,20 @@ export default function GeneratorForm() {
 
   const [withHuman, setWithHuman] = useState(true);
   const [useLogo, setUseLogo] = useState(true);
-  const [style, setStyle] = useState<"lifestyle" | "studio">("lifestyle");
   const [extraText, setExtraText] = useState("");
+  const [useCartoon, setUseCartoon] = useState(false);
+
+  const [connected, setConnected] = useState({
+    facebook: false,
+    instagram: false,
+  });
+
+  useEffect(() => {
+    fetch("/api/meta/status")
+      .then((r) => r.json())
+      .then((d) => setConnected(d))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!loading) return;
@@ -63,7 +75,14 @@ export default function GeneratorForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      return res.json();
+      const data = await res.json();
+
+      // Rzuć błąd jeśli status nie OK
+      if (!res.ok) {
+        throw new Error(data.error || "Wystąpił błąd");
+      }
+
+      return data;
     },
     onMutate: () => {
       setLoading(true);
@@ -95,7 +114,7 @@ export default function GeneratorForm() {
       withHuman,
       useLogo,
       extraText,
-      style,
+      useCartoon,
     });
   };
 
@@ -157,29 +176,17 @@ export default function GeneratorForm() {
               </Label>
             </div>
 
-            {/* --- SELECT: styl --- */}
+            {/* --- SWITCH: styl ilustracyjny --- */}
             <div className="flex items-center gap-3">
-              <Label className="ui-label text-sm whitespace-nowrap">
-                Styl kreacji
+              <Switch
+                id="art-style"
+                checked={useCartoon}
+                onCheckedChange={(v) => setUseCartoon(Boolean(v))}
+                className="switch-root"
+              />
+              <Label htmlFor="art-style" className="ui-label text-sm">
+                Styl ilustracyjny (kreskówkowy)
               </Label>
-
-              <Select
-                value={style}
-                onValueChange={(v: "lifestyle" | "studio") => setStyle(v)}
-              >
-                <SelectTrigger className="select-trigger h-10 text-sm min-w-[170px]">
-                  <SelectValue placeholder="Wybierz styl..." />
-                </SelectTrigger>
-
-                <SelectContent className="select-content">
-                  <SelectItem className="select-item" value="lifestyle">
-                    Lifestyle / social media
-                  </SelectItem>
-                  <SelectItem className="select-item" value="studio">
-                    Studio / ecommerce
-                  </SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
@@ -227,20 +234,20 @@ export default function GeneratorForm() {
               key={v}
               onClick={() => {
                 setSelected(v);
-                setCaption(variants[v].caption ?? "");
+                setCaption(variants[v].postDescription ?? "");
               }}
               className="cursor-pointer bg-white/5 hover:bg-white/10 transition border-white/10"
             >
               <CardContent className="p-3 space-y-3 flex flex-col items-center">
                 <img
                   src={variants[v].image}
-                  className="rounded-xl w-full max-w-[180px] aspect-[9/16] object-cover shadow-md"
+                  className="rounded-xl w-full max-w-[180px] aspect-[1/1] object-cover shadow-md"
                 />
                 <div className="font-semibold text-center text-sm">
                   Wariant {v}
                 </div>
-                <div className="text-xs opacity-60 text-center line-clamp-2">
-                  {variants[v].headline}
+                <div className="text-xs opacity-80 text-center line-clamp-2 italic">
+                  {variants[v].headline || "Hasło niedostępne"}
                 </div>
               </CardContent>
             </Card>
@@ -266,7 +273,7 @@ export default function GeneratorForm() {
               <div className="flex justify-center">
                 <img
                   src={variants[selected].image}
-                  className="rounded-xl w-full max-w-[320px] aspect-[9/16] object-cover shadow-xl"
+                  className="rounded-xl w-full max-w-[320px] aspect-[1/1] object-cover shadow-xl"
                 />
               </div>
 
@@ -280,34 +287,55 @@ export default function GeneratorForm() {
               <Separator />
 
               <div className="flex flex-wrap gap-3 items-center">
-                {/* FB */}
-                <form action="/api/publish/facebook" method="post">
-                  <input
-                    type="hidden"
-                    name="image"
-                    value={variants[selected].image}
-                  />
-                  <input type="hidden" name="caption" value={caption} />
-                  <Button className="bg-blue-600 hover:bg-blue-700">
-                    Facebook
+                {/* FACEBOOK */}
+                {connected.facebook ? (
+                  <form action="/api/publish/facebook" method="post">
+                    <input
+                      type="hidden"
+                      name="image"
+                      value={variants[selected].image}
+                    />
+                    <input type="hidden" name="caption" value={caption} />
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      Facebook
+                    </Button>
+                  </form>
+                ) : (
+                  <Button
+                    onClick={() => (window.location.href = "/connect/facebook")}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    Połącz z Facebookiem
                   </Button>
-                </form>
+                )}
 
-                {/* IG */}
-                <form action="/api/publish/instagram" method="post">
-                  <input
-                    type="hidden"
-                    name="image"
-                    value={variants[selected].image}
-                  />
-                  <input type="hidden" name="caption" value={caption} />
+                {/* INSTAGRAM */}
+                {connected.instagram ? (
+                  <form action="/api/publish/instagram" method="post">
+                    <input
+                      type="hidden"
+                      name="image"
+                      value={variants[selected].image}
+                    />
+                    <input type="hidden" name="caption" value={caption} />
+                    <Button
+                      variant="outline"
+                      className="border-pink-500 text-pink-500"
+                    >
+                      Instagram
+                    </Button>
+                  </form>
+                ) : (
                   <Button
                     variant="outline"
                     className="border-pink-500 text-pink-500"
+                    onClick={() =>
+                      (window.location.href = "/connect/instagram")
+                    }
                   >
-                    Instagram
+                    Połącz z Instagramem
                   </Button>
-                </form>
+                )}
 
                 <Button
                   variant="ghost"
