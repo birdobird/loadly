@@ -1,5 +1,12 @@
-import GeneratePage from "./dash/generate/page";
+"use client";
+
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  return <GeneratePage />;
+  return (
+    <main>
+      <h1>Strona główna</h1>
+      <Button>Przejdź do strony głównej</Button>
+    </main>
+  );
 }

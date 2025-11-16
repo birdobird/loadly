@@ -1,3 +1,8 @@
+export const metadata = {
+  title: "Strona nie istnieje | Loadly",
+  description: "Żądana strona nie została odnaleziona",
+};
+
 export default function NotFound() {
   return (
     <div className="flex min-h-screen items-center justify-center flex-col gap-4 text-center p-8">

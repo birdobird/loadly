@@ -1,141 +1,150 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Menu, X, Zap } from "lucide-react";
+import { Menu, Zap, LogOut } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Navbar() {
   const { data: session } = useSession();
-  const [open, setOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-lg border-b border-[var(--color-border)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 w-full">
-        <div className="flex items-center justify-between h-12 w-full">
-          <Link 
-            href="/" 
-            className="flex items-center gap-2 group no-underline"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-[var(--color-accent)] rounded-lg blur opacity-50 group-hover:opacity-75 transition-opacity" />
-              <div className="relative bg-[var(--color-accent)] p-2 rounded-lg">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
+    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-lg border-b border-[var(--color-border)] flex justify-center">
+      <div className="max-w-7xl w-full px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between">
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-2 group no-underline">
+          <div className="relative">
+            <div className="absolute inset-0 bg-[var(--color-accent)] rounded-lg blur opacity-50 group-hover:opacity-75 transition" />
+            <div className="relative bg-[var(--color-accent)] p-2 rounded-lg">
+              <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl text-[var(--color-text)]">
-              Loadly
-            </span>
+          </div>
+          <span className="font-bold text-xl text-[var(--color-text)]">
+            Loadly
+          </span>
+        </Link>
+
+        {/* DESKTOP MENU */}
+        <div className="hidden md:flex items-center gap-8">
+          <Link
+            href="/how-it-works"
+            className="text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-accent)] no-underline"
+          >
+            Jak to działa
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
-            <Link 
-              href="/how-it-works" 
-              className="text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-accent)] no-underline relative group"
-            >
-              Jak to działa
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[var(--color-accent)] group-hover:w-full transition-all duration-300" />
-            </Link>
-            <Link 
-              href="/pricing" 
-              className="text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-accent)] no-underline relative group"
-            >
-              Cennik
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[var(--color-accent)] group-hover:w-full transition-all duration-300" />
-            </Link>
-
-            {!session ? (
-              <Button 
-                onClick={() => signIn("google")}
-                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white shadow-[0_4px_15px_rgba(138,173,125,0.25)]"
-              >
-                Zaloguj przez Google
-              </Button>
-            ) : (
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)]">
-                  <div className="w-8 h-8 rounded-full bg-[var(--color-accent)] flex items-center justify-center text-white text-sm font-semibold">
-                    {session.user?.email?.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="text-sm font-medium max-w-[150px] truncate text-[var(--color-text)]">
-                    {session.user?.email}
-                  </span>
-                </div>
-                <Button 
-                  onClick={() => signOut()}
-                  className="bg-transparent text-[var(--color-text)] border border-[var(--color-border)] hover:bg-red-50 hover:border-red-300 hover:text-red-600 shadow-none"
-                >
-                  Wyloguj
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden p-2 rounded-lg hover:bg-[var(--color-bg)] transition-colors shadow-none"
+          <Link
+            href="/pricing"
+            className="text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-accent)] no-underline"
           >
-            {open ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            Cennik
+          </Link>
+
+          {/* SESSION LOGGED OUT */}
+          {!session && (
+            <Button
+              onClick={() => signIn("google")}
+              className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white"
+            >
+              Zaloguj przez Google
+            </Button>
+          )}
+
+          {/* SESSION LOGGED IN */}
+          {session && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none">
+                <Avatar className="cursor-pointer border">
+                  <AvatarImage src={session.user?.image ?? undefined} />
+                  <AvatarFallback className="bg-[var(--color-accent)] text-white">
+                    {session.user?.email?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem disabled>
+                  {session.user?.email}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Wyloguj
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
-      </div>
 
-      {open && (
-        <div className="md:hidden border-t border-[var(--color-border)] bg-white backdrop-blur-xl animate-fade-in absolute top-24 left-0 right-0">
-          <div className="container mx-auto px-6 py-6 space-y-4">
-            <Link
-              href="/how-it-works"
-              onClick={() => setOpen(false)}
-              className="block px-4 py-3 rounded-lg text-sm font-medium hover:bg-[var(--color-bg)] transition-colors no-underline text-[var(--color-text)]"
-            >
-              Jak to działa
-            </Link>
+        {/* MOBILE MENU BUTTON */}
+        <Sheet>
+          <SheetTrigger className="md:hidden">
+            <Menu size={26} />
+          </SheetTrigger>
 
-            <Link
-              href="/pricing"
-              onClick={() => setOpen(false)}
-              className="block px-4 py-3 rounded-lg text-sm font-medium hover:bg-[var(--color-bg)] transition-colors no-underline text-[var(--color-text)]"
-            >
-              Cennik
-            </Link>
+          <SheetContent side="right" className="w-72 space-y-6">
+            <div className="pt-4 flex flex-col gap-4">
+              <Link
+                href="/how-it-works"
+                className="text-[var(--color-text)] text-sm font-medium no-underline"
+              >
+                Jak to działa
+              </Link>
 
-            <div className="pt-4 border-t border-[var(--color-border)]">
-              {!session ? (
+              <Link
+                href="/pricing"
+                className="text-[var(--color-text)] text-sm font-medium no-underline"
+              >
+                Cennik
+              </Link>
+
+              {!session && (
                 <Button
-                  className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white shadow-[0_4px_15px_rgba(138,173,125,0.25)]"
-                  onClick={() => {
-                    setOpen(false);
-                    signIn("google");
-                  }}
+                  onClick={() => signIn("google")}
+                  className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white w-full"
                 >
                   Zaloguj przez Google
                 </Button>
-              ) : (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[var(--color-bg)] border border-[var(--color-border)]">
-                    <div className="w-10 h-10 rounded-full bg-[var(--color-accent)] flex items-center justify-center text-white font-semibold">
-                      {session.user?.email?.charAt(0).toUpperCase()}
-                    </div>
-                    <span className="text-sm font-medium truncate text-[var(--color-text)]">
+              )}
+
+              {session && (
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-bg)] border border-[var(--color-border)]">
+                    <Avatar>
+                      <AvatarFallback className="bg-[var(--color-accent)] text-white">
+                        {session.user?.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium truncate">
                       {session.user?.email}
                     </span>
                   </div>
+
                   <Button
-                    className="w-full bg-transparent text-[var(--color-text)] border border-[var(--color-border)] hover:bg-red-50 hover:border-red-300 hover:text-red-600 shadow-none"
-                    onClick={() => {
-                      setOpen(false);
-                      signOut();
-                    }}
+                    variant="outline"
+                    onClick={() => signOut()}
+                    className="border-red-300 text-red-600 hover:bg-red-50"
                   >
                     Wyloguj
                   </Button>
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      )}
+          </SheetContent>
+        </Sheet>
+      </div>
     </nav>
   );
 }
