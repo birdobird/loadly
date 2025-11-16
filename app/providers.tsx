@@ -4,7 +4,8 @@ import { SessionProvider } from "next-auth/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
 import { Toaster } from "sonner";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/shared/navbar";
+import Footer from "@/components/shared/footer";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <Toaster richColors position="top-right" />
         <Navbar />
         <main className="container py-8">{children}</main>
+        <Footer />
       </QueryClientProvider>
     </SessionProvider>
   );
