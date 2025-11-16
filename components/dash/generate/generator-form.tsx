@@ -10,13 +10,6 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -75,11 +68,12 @@ export default function GeneratorForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       const data = await res.json();
 
-      // Rzuć błąd jeśli status nie OK
       if (!res.ok) {
-        throw new Error(data.error || "Wystąpił błąd");
+        // WAŻNE: przekaż backendowy error do catch()
+        throw new Error(data.error || "Nieznany błąd");
       }
 
       return data;
@@ -97,9 +91,10 @@ export default function GeneratorForm() {
       setVariants(data.variants);
       toast.success("Kreacje zostały wygenerowane.");
     },
-    onError: (err) => {
+    onError: (err: any) => {
       setLoading(false);
-      toast.error("Wystąpił błąd podczas generowania kreacji.");
+      // teraz wyświetli prawdziwy komunikat z backendu
+      toast.error(err.message);
     },
   });
 

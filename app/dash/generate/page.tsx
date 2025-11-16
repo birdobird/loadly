@@ -1,33 +1,34 @@
+"use client";
+
+import { motion } from "framer-motion";
 import GeneratorForm from "@/components/dash/generate/generator-form";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import RequireAuth from "@/components/auth/require-auth";
 
 export default function GeneratePage() {
   return (
-    <div className="space-y-16 text-center">
-      <section className="space-y-6">
-        <h1 className="text-4xl md:text-5xl font-semibold leading-tight tracking-tight text-[var(--color-text)]">
-          Wklej link - Generuj - Edytuj - Opublikuj
-        </h1>
-        <p className="text-lg text-[var(--color-text-muted)] max-w-2xl mx-auto">
-          Stwórz profesjonalne posty z AI. Loadly łączy się z Facebookiem i
-          Instagramem, by publikować automatycznie.
-        </p>
-        <div className="flex items-center justify-center gap-4">
-          <a href="#generate">
-            <Button>Generuj</Button>
-          </a>
-          <Link href="/pricing">
-            <Button className="bg-transparent text-[var(--color-text)] border border-[var(--color-border)] hover:bg-[var(--color-bg-card)]">
-              Cennik
-            </Button>
-          </Link>
-        </div>
-      </section>
+    <RequireAuth>
+      <main className="relative flex flex-col items-center justify-start pt-40 pb-32 px-4">
+        <div className="grid-bg" />
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="relative z-10 mt-20 w-full max-w-3xl"
+        >
+          <Card className="bg-white/70 backdrop-blur-xl shadow-xl border rounded-2xl">
+            <CardHeader>
+              <CardTitle className="text-center text-2xl font-semibold">
+                Generator kreacji reklamowej
+              </CardTitle>
+            </CardHeader>
 
-      <section id="generate" className="card">
-        <GeneratorForm />
-      </section>
-    </div>
+            <CardContent className="p-8">
+              <GeneratorForm />
+            </CardContent>
+          </Card>
+        </motion.section>
+      </main>
+    </RequireAuth>
   );
 }

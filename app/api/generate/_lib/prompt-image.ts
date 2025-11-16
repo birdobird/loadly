@@ -39,11 +39,13 @@ SCENA BEZ OSOBY:
     ? `
 LOGO SKLEPU:
 - Umieść logo sklepu w lewym dolnym rogu.
-- Logo powinno być małe, subtelne, bez dodatkowego tła.
-- Jeśli logo ma białe/kolorowe tło, usuń je - logo powinno być przezroczyste.
-- Nie dodawaj ramek, pasków ani żadnych elementów wokół logo.
+- Logo subtelne, małe, bez tła.
 `
-    : "";
+    : `
+LOGO SKLEPU:
+- NIE UMIESZCZAJ żadnego logo, znaku wodnego, brandingu ani elementów dodatkowych.
+- Scena ma być całkowicie BEZLOGOWA.
+`;
 
   return `
 Create a ${

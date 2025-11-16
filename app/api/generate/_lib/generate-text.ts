@@ -1,18 +1,36 @@
 import { ai } from "./ai";
 import { PageContext } from "./scrape-context";
 
-export async function generateText(context: PageContext, extraText: string, key: "A" | "B") {
+export async function generateText(
+  context: PageContext,
+  extraText: string,
+  key: "A" | "B"
+) {
   const prompt = `
-Jesteś ekspertem od pisania krótkich, emocjonalnych tekstów reklamowych (Meta Ads).
+Jesteś ekspertem Meta Ads i copywriterem konwertujących postów.
+Napisz treści w języku polskim, dynamiczne, naturalne i dopasowane do produktu.
+
 Dane o produkcie:
 ${JSON.stringify(context)}
-Dodatkowy kontekst kampanii: "${extraText || "brak"}"
-Wygeneruj ${key === "A" ? "emocjonalną" : "sprzedażową"} wersję reklamy.
-Zwróć JSON:
+
+Dodatkowy kontekst kampanii:
+"${extraText || "brak"}"
+
+Wygeneruj WERSJĘ: ${key === "A" ? "emocjonalną" : "sprzedażową"}
+
+🔹 Wymagania:
+- headline: 1–4 słowa, mocne, chwytliwe
+- postDescription: 2–4 zdania (maks 350 znaków)
+- MUSZĄ BYĆ nowe linie (Enter)
+- dodaj 3–6 hashtagów dopasowanych do produktu (po polsku lub mix PL/EN)
+- ZERO emotek stockowych typu 😂💯🔥 (max 1–2 delikatne emotki są OK)
+
+Zwróć poprawny JSON:
 {
-  "headline": "1–4 słowa po polsku",
-  "postDescription": "opis posta 150–250 znaków po polsku"
-}`;
+  "headline": "...",
+  "postDescription": "..."
+}
+`;
 
   const txtRes = await ai.models.generateContent({
     model: "gemini-2.0-flash",
@@ -21,7 +39,9 @@ Zwróć JSON:
 
   const rawText: string =
     (txtRes as any).text ??
-    txtRes.candidates?.[0]?.content?.parts?.map((p: any) => p.text || "").join("\n") ??
+    txtRes.candidates?.[0]?.content?.parts
+      ?.map((p: any) => p.text || "")
+      .join("\n") ??
     "{}";
 
   let headline = "Nowa inspiracja!";

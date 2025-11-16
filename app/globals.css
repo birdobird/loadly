@@ -1,12 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* ======================================= */
-/*    SHADCN THEME – TAILWIND V4 VERSION   */
-/* ======================================= */
-
 @theme inline {
-  /* ====== Loadly main palette ====== */
   --color-background: #efeee7;
   --color-foreground: #1a1a1a;
 
@@ -18,9 +13,10 @@
 
   --color-primary: #8aad7d;
   --color-primary-foreground: #ffffff;
+  --color-primary-hover: #769b69;
 
-  --color-accent: #e7e5df; /* delikatny gray */
-  --color-accent-foreground: #1a1a1a; /* ciemny tekst */
+  --color-accent: #e7e5df;
+  --color-accent-foreground: #1a1a1a;
 
   --color-destructive: #ef4444;
   --color-destructive-foreground: #ffffff;
@@ -30,10 +26,6 @@
   --color-popover: #ffffff;
   --color-popover-foreground: #1a1a1a;
 }
-
-/* ======================================= */
-/* GLOBAL STYLE BASE                      */
-/* ======================================= */
 
 @layer base {
   * {
@@ -47,6 +39,16 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   button:not(:disabled),
   [role="button"] {
     cursor: pointer;
@@ -54,5 +56,35 @@
 
   [data-slot="dropdown-menu-item"] {
     cursor: pointer;
+  }
+}
+
+@layer components {
+  .nav-link {
+    position: relative;
+    padding-bottom: 2px;
+    font-weight: 500;
+    color: var(--color-muted-foreground);
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--color-primary);
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 2px;
+    width: 0;
+    background-color: var(--color-primary);
+    border-radius: 9999px;
+    transition: width 0.2s cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
   }
 }

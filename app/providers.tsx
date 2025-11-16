@@ -13,7 +13,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <Toaster richColors position="top-right" />
         <Navbar />
-        <main>{children}</main>
+        <main className="mt-16">{children}</main>
         <Footer />
       </QueryClientProvider>
     </SessionProvider>
