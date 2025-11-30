@@ -93,7 +93,7 @@ export async function findProductImages(
     // 6️⃣ Ranking prosty
     const ranked = filtered.sort((a, b) => getScore(b) - getScore(a));
 
-    console.log("🧩 Znalazłem obrazy:", ranked.slice(0, limit));
+    // console.log("🧩 Znalazłem obrazy:", ranked.slice(0, limit));
     return ranked.slice(0, limit);
   } catch (e) {
     console.error("❌ findProductImages error:", e);
@@ -176,7 +176,7 @@ Rules:
     const index = match ? parseInt(match[1]) : 0;
 
     if (index >= 0 && index < first.length) {
-      console.log(`🤖 AI wybrało index ${index}: ${first[index]}`);
+      // console.log(`🤖 AI wybrało index ${index}: ${first[index]}`);
       return first[index];
     }
 

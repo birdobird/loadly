@@ -11,6 +11,22 @@ import { findStoreLogo } from "@/lib/scrape-logo";
 import { generateText } from "./_lib/generate-text";
 import { generateImage } from "./_lib/generate-image";
 
+async function verifyTurnstile(token: string) {
+  const res = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      body: new URLSearchParams({
+        secret: process.env.TURNSTILE_SECRET_KEY!,
+        response: token,
+      }),
+    }
+  );
+
+  const data = await res.json();
+  return data.success === true;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
@@ -18,6 +34,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "Musisz być zalogowany, aby generować kreacje." },
         { status: 401 }
+      );
+    }
+
+    const body = await req.json();
+
+    // CAPTCHa
+    if (!body.turnstileToken) {
+      return NextResponse.json(
+        { error: "Brak tokenu bezpieczeństwa (Captcha)." },
+        { status: 400 }
+      );
+    }
+
+    const isHuman = await verifyTurnstile(body.turnstileToken);
+
+    if (!isHuman) {
+      return NextResponse.json(
+        { error: "Weryfikacja Captcha nie powiodła się." },
+        { status: 403 }
       );
     }
 
@@ -60,13 +95,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json();
-    const url = body.url;
-    const imageUrl = body.imageUrl;
-    const withHuman = body.withHuman ?? true;
-    const extraText = body.extraText ?? "";
-    const useLogo = body.useLogo ?? true;
-    const useCartoon = body.useCartoon ?? false;
+    const { url, imageUrl, withHuman, extraText, useLogo, useCartoon } = body;
 
     if (!url && !imageUrl) {
       return NextResponse.json(

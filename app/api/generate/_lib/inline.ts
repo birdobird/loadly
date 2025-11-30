@@ -16,7 +16,6 @@ export async function inline(url: string, maxRetries = 2) {
           const arrayBuffer = converted.buffer as ArrayBuffer;
           buf = Buffer.from(arrayBuffer);
           mimeType = "image/png";
-          console.log(`🧩 Converted ${url} → PNG`);
         } catch (e) {
           console.warn(
             "⚠️ Błąd konwersji WebP/AVIF → PNG:",
@@ -32,18 +31,18 @@ export async function inline(url: string, maxRetries = 2) {
         },
       };
     } catch (err) {
-      console.warn(
-        `⚠️ Próba ${attempt}/${maxRetries} nieudana dla ${url}:`,
-        (err as Error).message
-      );
+      // console.log(
+      //   `⚠️ Próba ${attempt}/${maxRetries} nieudana dla ${url}:`,
+      //   (err as Error).message
+      // );
       if (attempt < maxRetries) {
         await new Promise((r) => setTimeout(r, 800 * attempt));
       }
     }
   }
 
-  console.error(
-    `❌ Nie udało się pobrać obrazu po ${maxRetries} próbach: ${url}`
-  );
+  // console.log(
+  //   `❌ Nie udało się pobrać obrazu po ${maxRetries} próbach: ${url}`
+  // );
   return null;
 }

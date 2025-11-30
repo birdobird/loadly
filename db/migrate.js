@@ -1,8 +1,6 @@
 import { readFileSync } from "node:fs";
 import { Client } from "pg";
 
-console.log(process.env.DATABASE_URL);
-
 const run = async () => {
   const c = new Client({ connectionString: process.env.DATABASE_URL });
   await c.connect();

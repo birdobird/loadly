@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -55,10 +56,11 @@ export default function Home() {
             onChange={(e) => setUrl(e.target.value)}
             className="h-14 text-lg rounded-xl bg-white/80 backdrop-blur shadow-sm"
           />
-
-          <Button className="h-14 px-6 text-lg rounded-xl shadow-md">
-            Stwórz reklamę
-          </Button>
+          <Link href="/dash/generate">
+            <Button className="h-14 px-6 text-lg rounded-xl shadow-md">
+              Stwórz reklamę
+            </Button>
+          </Link>
         </motion.div>
 
         <Badge className="mt-4 bg-primary/20 text-primary border-primary/30">
@@ -133,7 +135,7 @@ export default function Home() {
             {[
               {
                 name: "Kamil",
-                text: "Reklama gotowa w kilka sekund. Nigdy nie było to łatwiejsze.",
+                text: "Reklama gotowa w kilka sekund. Super sprawa.",
               },
               {
                 name: "Agnieszka",
@@ -145,11 +147,11 @@ export default function Home() {
               },
               {
                 name: "Alicja",
-                text: "Reklama gotowa w kilka sekund. Nigdy nie było to łatwiejsze.",
+                text: "Wszystko gotowe w mniej niż 2 min!",
               },
             ].map((item, i) => (
-              <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
-                <Card className="bg-white/70 backdrop-blur rounded-2xl shadow-lg">
+              <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3 mb-1">
+                <Card className="bg-background">
                   <CardContent className="p-6">
                     <p className="text-muted-foreground">{item.text}</p>
                     <p className="font-semibold mt-4">{item.name}</p>

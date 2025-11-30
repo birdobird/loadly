@@ -49,9 +49,9 @@ export async function findStoreLogo(url: string): Promise<string | null> {
     if (logoCandidates.length === 0) return null;
     if (logoCandidates.length === 1) return logoCandidates[0];
 
-    console.log(
-      `🔍 Analizuję ${logoCandidates.length} kandydatów logotypu dla ${url}`
-    );
+    // console.log(
+    //   `🔍 Analizuję ${logoCandidates.length} kandydatów logotypu dla ${url}`
+    // );
 
     // === Super-precyzyjny prompt ===
     const parts: any[] = [
@@ -96,7 +96,7 @@ Zwróć JEDEN URL z poniższej listy, dokładnie jak jest napisany.`,
       limited.find((l) => answer.includes(l)) || answer.split("\n")[0];
 
     if (best && best.startsWith("http")) {
-      console.log("🏁 Wybrane logo sklepu:", best);
+      // console.log("🏁 Wybrane logo sklepu:", best);
       return best;
     }
 
@@ -105,7 +105,7 @@ Zwróć JEDEN URL z poniższej listy, dokładnie jak jest napisany.`,
       logoCandidates.find((l) => /logo|brand/i.test(l)) ||
       logoCandidates[0];
 
-    console.log("⚙️ Fallback logo:", fallback);
+    // console.log("⚙️ Fallback logo:", fallback);
     return fallback;
   } catch (err) {
     console.error("❌ Błąd findStoreLogo:", err);

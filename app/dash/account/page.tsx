@@ -39,7 +39,7 @@ export default function AccountPage() {
 
   return (
     <div className="w-full flex justify-center pt-28 pb-20 px-4">
-      <div className="w-[900px] space-y-12">
+      <div className="w-full max-w-6xl space-y-12">
         {/* HEADER */}
         <h1 className="text-4xl font-semibold text-center">Twoje konto</h1>
 
@@ -60,7 +60,7 @@ export default function AccountPage() {
             <div className="space-y-1">
               <div className="font-medium">{email}</div>
               <div className="text-sm opacity-70">
-                Plan: <span className="font-medium">{plan}</span>
+                Plan: <span className="font-medium capitalize">{plan}</span>
               </div>
               <div className="text-sm opacity-70">
                 Pozostałe kreacje:{" "}
@@ -84,8 +84,8 @@ export default function AccountPage() {
                   {plan === "free"
                     ? "Darmowe konto — 1 kreacja"
                     : plan === "premium"
-                    ? "15 kreacji / miesiąc"
-                    : "100 kreacji / miesiąc"}
+                    ? "30 kreacji / miesiąc"
+                    : "150 kreacji / miesiąc"}
                 </div>
               </div>
 

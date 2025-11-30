@@ -8,13 +8,13 @@ import RequireAuth from "@/components/auth/require-auth";
 export default function GeneratePage() {
   return (
     <RequireAuth>
-      <main className="relative flex flex-col items-center justify-start pt-40 pb-32 px-4">
+      <main className="relative flex flex-col items-center justify-start pt-10 pb-32 px-4 min-h-screen">
         <div className="grid-bg" />
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          className="relative z-10 mt-20 w-full max-w-3xl"
+          className="relative z-10 mt-20 w-full max-w-7xl"
         >
           <Card className="bg-white/70 backdrop-blur-xl shadow-xl border rounded-2xl">
             <CardHeader>
