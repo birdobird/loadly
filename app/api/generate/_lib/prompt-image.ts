@@ -83,15 +83,18 @@ PRODUCT CONTEXT (for mood, DO NOT display):
 ${productInfo}
 
 TEXT ON IMAGE:
-- Use Polish text only
-- Font: modern, readable
-- No product descriptions, specs, or prices
+- Use Polish text only.
+- Font must be modern and readable.
+- Never generate product descriptions, specs, or prices.
 
-TEXT RENDERING PRIORITY:
-- The following text must appear EXACTLY as written, in correct Polish letters.
-- Do NOT translate or modify it.
-- Ensure correct diacritics: ą, ć, ę, ł, ń, ó, ś, ź, ż.
-- The text must be perfectly legible, without misspellings.
+TEXT RENDERING RULES:
+- Use EXACTLY the text provided in {text_on_image}.
+- Do NOT translate, modify, paraphrase, or improve it.
+- Do NOT add or remove any words.
+- Keep the exact spelling, spacing, punctuation, and order.
+- Ensure correct Polish diacritics: ą, ć, ę, ł, ń, ó, ś, ź, ż.
+- The text must appear 1:1, perfectly legible and without any misspellings.
+- If unsure, always copy the text exactly as provided, without changes.
 
 ${logoRule}
 
