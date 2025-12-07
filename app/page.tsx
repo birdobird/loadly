@@ -38,7 +38,7 @@ export default function Home() {
         <motion.p
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl"
+          className="mt-4 text-lg md:text-xl text-foreground max-w-2xl"
         >
           Wklej link do produktu — Loadly wygeneruje obraz, opis, CTA i format
           do publikacji.
@@ -91,12 +91,14 @@ export default function Home() {
           ].map((item, i) => (
             <Card
               key={i}
-              className="bg-white/70 backdrop-blur border shadow-lg rounded-2xl"
+              className="rounded-2xl bg-[rgba(15,23,42,0.9)]/90 backdrop-blur-xl border border-[rgba(0, 6, 14, 0.99)] shadow-[0_18px_45px_rgba(15,23,42,0.6)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(15,23,42,0.9)]"
             >
               <CardHeader>
-                <CardTitle>{item.title}</CardTitle>
+                <CardTitle className="text-lg font-semibold text-foreground">
+                  {item.title}
+                </CardTitle>
               </CardHeader>
-              <CardContent className="text-muted-foreground">
+              <CardContent className="text-sm text-foreground leading-relaxed">
                 {item.desc}
               </CardContent>
             </Card>
@@ -110,60 +112,27 @@ export default function Home() {
           Przykładowe kreacje
         </h2>
 
-        <p className="text-center mt-3 text-muted-foreground">
-          Wygenerowane w Loadly — tu pojawią się realne przykłady.
+        <p className="text-center mt-3 text-foreground">
+          Wygenerowane w Loadly — realne przykłady gotowych kreacji.
         </p>
 
-        <div className="mt-16 grid md:grid-cols-3 gap-10 opacity-70">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="aspect-square rounded-2xl bg-muted border shadow-inner"
-            />
-          ))}
+        <div className="mt-16 grid md:grid-cols-3 gap-10 opacity-90">
+          {["/kreacja_1.png", "/kreacja_2.png", "/kreacja_3.png"].map(
+            (src, i) => (
+              <div
+                key={src}
+                className="aspect-square rounded-2xl bg-muted border border-[rgba(148,163,184,0.5)] shadow-inner overflow-hidden flex items-center justify-center"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt={`Przykładowa kreacja ${i + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )
+          )}
         </div>
-      </section>
-
-      {/* TESTIMONIALS — SHADCN CAROUSEL */}
-      <section className="relative mt-32 w-full max-w-4xl z-10 px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center">
-          Opinie użytkowników
-        </h2>
-
-        <Carousel className="mt-12">
-          <CarouselContent>
-            {[
-              {
-                name: "Kamil",
-                text: "Reklama gotowa w kilka sekund. Super sprawa.",
-              },
-              {
-                name: "Agnieszka",
-                text: "Jako sklep odzieżowy — absolutnie zmienia zasady gry.",
-              },
-              {
-                name: "Marek",
-                text: "Integracja z IG oszczędza mi 40 min dziennie.",
-              },
-              {
-                name: "Alicja",
-                text: "Wszystko gotowe w mniej niż 2 min!",
-              },
-            ].map((item, i) => (
-              <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3 mb-1">
-                <Card className="bg-background">
-                  <CardContent className="p-6">
-                    <p className="text-muted-foreground">{item.text}</p>
-                    <p className="font-semibold mt-4">{item.name}</p>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
       </section>
     </main>
   );

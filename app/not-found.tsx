@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-[var(--color-background)]">
+    <div className="min-h-screen flex items-center justify-center px-6">
       
       <div className="max-w-md w-full text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
         

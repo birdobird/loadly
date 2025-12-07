@@ -21,6 +21,9 @@ export default function PricingPage() {
 
   return (
     <main className="relative flex flex-col items-center pb-32 pt-32 min-h-screen">
+      {/* GRID BACKGROUND */}
+      <div className="grid-bg" />
+
       {/* ...HEADER... */}
 
       <section className="relative z-10 mt-24 w-full max-w-6xl px-6">
@@ -30,15 +33,17 @@ export default function PricingPage() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <Card className="rounded-2xl bg-white/70 backdrop-blur border shadow-xl h-full flex flex-col">
+            <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/90 backdrop-blur-xl border border-[rgba(148,163,184,0.45)] shadow-[0_18px_45px_rgba(15,23,42,0.6)] h-full flex flex-col transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(15,23,42,0.9)]">
               <CardHeader>
-                <CardTitle className="text-2xl font-semibold">Free</CardTitle>
-                <p className="text-muted-foreground">Na start</p>
+                <CardTitle className="text-2xl font-semibold text-foreground">
+                  Free
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">Na start</p>
               </CardHeader>
 
               <CardContent className="flex flex-col gap-6 flex-grow">
-                <p className="text-4xl font-bold">0 zł</p>
-                <ul className="text-muted-foreground space-y-3 text-sm">
+                <p className="text-4xl font-bold text-foreground">0 zł</p>
+                <ul className="text-sm text-muted-foreground space-y-3">
                   <li>• 1 kreacja</li>
                   <li>• Watermark Loadly</li>
                   <li>• Podstawowy layout</li>
@@ -56,23 +61,23 @@ export default function PricingPage() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <Card className="relative rounded-2xl bg-white border-primary shadow-xl backdrop-blur-xl h-full flex flex-col">
+            <Card className="relative rounded-2xl bg-[rgba(15,23,42,0.98)] backdrop-blur-2xl border border-primary/70 shadow-[0_22px_60px_rgba(236,72,153,0.6)] h-full flex flex-col scale-[1.02]">
               <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full shadow-lg">
                 Najpopularniejszy
               </Badge>
 
               <CardHeader>
-                <CardTitle className="text-2xl font-semibold">
+                <CardTitle className="text-2xl font-semibold text-foreground">
                   Premium
                 </CardTitle>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Dla rozwijających się sklepów
                 </p>
               </CardHeader>
 
               <CardContent className="flex flex-col gap-6 flex-grow">
-                <p className="text-4xl font-bold">49 zł</p>
-                <ul className="text-muted-foreground space-y-3 text-sm">
+                <p className="text-4xl font-bold text-foreground">49 zł</p>
+                <ul className="text-sm text-muted-foreground space-y-3">
                   <li>• 30 kreacji</li>
                   <li>• Możliwość wyboru stylu</li>
                   <li>• Lepsze layouty i CTA</li>
@@ -82,9 +87,13 @@ export default function PricingPage() {
                 <Button
                   className="mt-auto bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl shadow-lg"
                   disabled={loading === process.env.NEXT_PUBLIC_PRICE_PREMIUM}
-                  onClick={() => handleCheckout(process.env.NEXT_PUBLIC_PRICE_PREMIUM!)}
+                  onClick={() =>
+                    handleCheckout(process.env.NEXT_PUBLIC_PRICE_PREMIUM!)
+                  }
                 >
-                  {loading === process.env.NEXT_PUBLIC_PRICE_PREMIUM ? "Ładowanie..." : "Wybierz plan"}
+                  {loading === process.env.NEXT_PUBLIC_PRICE_PREMIUM
+                    ? "Ładowanie..."
+                    : "Wybierz plan"}
                 </Button>
               </CardContent>
             </Card>
@@ -95,19 +104,19 @@ export default function PricingPage() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <Card className="rounded-2xl bg-white/70 backdrop-blur border shadow-xl h-full flex flex-col">
+            <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/90 backdrop-blur-xl border border-[rgba(148,163,184,0.45)] shadow-[0_18px_45px_rgba(15,23,42,0.6)] h-full flex flex-col transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(15,23,42,0.9)]">
               <CardHeader>
-                <CardTitle className="text-2xl font-semibold">
+                <CardTitle className="text-2xl font-semibold text-foreground">
                   Enterprise
                 </CardTitle>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Dla marek i większych sklepów
                 </p>
               </CardHeader>
 
               <CardContent className="flex flex-col gap-6 flex-grow">
-                <p className="text-4xl font-bold">99 zł</p>
-                <ul className="text-muted-foreground space-y-3 text-sm">
+                <p className="text-4xl font-bold text-foreground">99 zł</p>
+                <ul className="text-sm text-muted-foreground space-y-3">
                   <li>• 150 kreacji</li>
                   <li>• Priorytet generowania</li>
                   <li>• Dedykowane style</li>
@@ -116,10 +125,16 @@ export default function PricingPage() {
 
                 <Button
                   className="mt-auto rounded-xl"
-                  disabled={loading === process.env.NEXT_PUBLIC_PRICE_ENTERPRISE}
-                  onClick={() => handleCheckout(process.env.NEXT_PUBLIC_PRICE_ENTERPRISE!)}
+                  disabled={
+                    loading === process.env.NEXT_PUBLIC_PRICE_ENTERPRISE
+                  }
+                  onClick={() =>
+                    handleCheckout(process.env.NEXT_PUBLIC_PRICE_ENTERPRISE!)
+                  }
                 >
-                  {loading === process.env.NEXT_PUBLIC_PRICE_ENTERPRISE ? "Ładowanie..." : "Skontaktuj się"}
+                  {loading === process.env.NEXT_PUBLIC_PRICE_ENTERPRISE
+                    ? "Ładowanie..."
+                    : "Skontaktuj się"}
                 </Button>
               </CardContent>
             </Card>

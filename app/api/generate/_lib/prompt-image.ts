@@ -70,9 +70,6 @@ CRITICAL:
 - DO NOT replace product with another
 - Only change background/environment
 
-LANGUAGE:
-All text MUST be in POLISH language.
-
 PRODUCT PLACEMENT:
 - Product must be the main focal point
 - Keep it clearly visible
@@ -82,25 +79,23 @@ ${personRule}
 PRODUCT CONTEXT (for mood, DO NOT display):
 ${productInfo}
 
-TEXT ON IMAGE:
-- Use Polish text only.
-- Font must be modern and readable.
-- Never generate product descriptions, specs, or prices.
+LANGUAGE:
+- All visible text on the image MUST be in Polish.
+- Write Polish words ONLY with basic Latin letters (a-z, A-Z) without any accents.
+- Prefer words and phrasing that still sound natural to a Polish speaker without diacritics.
 
-TEXT RENDERING RULES:
-- Use EXACTLY the text provided in {text_on_image}.
-- Do NOT translate, modify, paraphrase, or improve it.
-- Do NOT add or remove any words.
-- Keep the exact spelling, spacing, punctuation, and order.
-- Ensure correct Polish diacritics: ą, ć, ę, ł, ń, ó, ś, ź, ż.
-- The text must appear 1:1, perfectly legible and without any misspellings.
-- If unsure, always copy the text exactly as provided, without changes.
+TEXT ON IMAGE:
+- Create a short Polish marketing headline and, optionally, a very short CTA.
+- Text must sound like real Polish advertising copy, just written without diacritics.
+- Use simple, clear words and avoid long sentences.
+- Avoid words that are hard to read without accents when possible.
 
 ${logoRule}
 
 FORBIDDEN:
-- Frames, banners, bars
-- Non-Polish text
+- Any non‑Polish words or mixed languages
+- Obvious spelling mistakes in Polish text
+- Frames, banners, UI bars
 - Product modifications
 
 Additional mood (do not display):

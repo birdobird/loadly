@@ -42,23 +42,23 @@ export default function Navbar() {
         z-50 flex items-center justify-center
         transition-all duration-300
         ${scrolled ? "scale-[0.97] opacity-95" : "scale-100 opacity-100"}
-        backdrop-blur-[8px]
+        backdrop-blur-2xl rounded-2xl
       `}
     >
       <div
         className="
           w-[92vw] max-w-7xl
-          px-4 py-4
-          flex flex-col md:flex-row items-center justify-between gap-6
-          bg-white/50
-          border border-[var(--color-border)]
+          px-4 py-3
+          flex flex-row items-center justify-between gap-4 md:gap-6
+          bg-[rgba(15,23,42,0.92)]
+          border border-[var(--color-border)]/70
           rounded-2xl 
-          shadow-[0_8px_25px_rgba(0,0,0,0.08)]
+          shadow-[0_18px_45px_rgba(15,23,42,0.6)]
         "
       >
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-3 select-none">
-          <Image src="/logo.png" alt="Loadly Logo" width={100} height={100} />
+          <Image src="/logo2.png" alt="Loadly Logo" width={100} height={100} />
         </Link>
 
         {/* DESKTOP MENU */}
@@ -106,7 +106,7 @@ export default function Navbar() {
 
               <DropdownMenuContent
                 align="end"
-                className="w-56 shadow-xl rounded-xl backdrop-blur-xl bg-white/80 border border-white/60"
+                className="w-56 shadow-xl rounded-xl backdrop-blur-xl bg-[rgba(15,23,42,0.98)] border border-[var(--color-border)]/70 text-foreground"
               >
                 <DropdownMenuLabel className="font-semibold">
                   {session.user?.email}
@@ -153,7 +153,10 @@ export default function Navbar() {
             <Menu size={26} />
           </SheetTrigger>
 
-          <SheetContent side="right" className="w-72 space-y-6 p-6">
+          <SheetContent
+            side="right"
+            className="w-72 space-y-6 p-6 bg-[rgba(15,23,42,0.98)] text-foreground border-l border-[var(--color-border)]/70"
+          >
             <div className="pt-4 flex flex-col gap-4">
               <Link href="/how-it-works" className="font-medium">
                 Jak to działa

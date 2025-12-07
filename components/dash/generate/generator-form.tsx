@@ -38,7 +38,7 @@ export default function GeneratorForm() {
   const [progress, setProgress] = useState(0);
 
   const [withHuman, setWithHuman] = useState(true);
-  const [useLogo, setUseLogo] = useState(true);
+  const [useLogo, setUseLogo] = useState(false);
   const [extraText, setExtraText] = useState("");
   const [useCartoon, setUseCartoon] = useState(false);
 
@@ -177,9 +177,9 @@ export default function GeneratorForm() {
 
       <div className="space-y-8">
         {/* PANEL WEJŚCIOWY */}
-        <Card className="bg-white/5 backdrop-blur border-white/10">
+        <Card className="bg-[rgba(15,23,42,0.9)]/95 backdrop-blur-2xl border border-[rgba(148,163,184,0.45)] shadow-[0_22px_60px_rgba(15,23,42,0.9)] rounded-2xl">
           <CardHeader>
-            <CardTitle className="text-base md:text-lg">
+            <CardTitle className="text-base md:text-lg font-semibold text-foreground tracking-tight">
               Kreacje A/B z produktem
             </CardTitle>
           </CardHeader>
@@ -202,10 +202,10 @@ export default function GeneratorForm() {
               placeholder="Kontekst kampanii (np. Black Friday -40%, nowa kolekcja, limitowana edycja)…"
               value={extraText}
               onChange={(e) => setExtraText(e.target.value)}
-              className="text-sm"
+              className="text-sm bg-[rgba(15,23,42,0.9)] border-[var(--color-border)]"
             />
-            <div className="flex gap-4 items-center">
-              <div className="grid md:grid-cols-3 gap-6 items-center bg-white/50 p-4 rounded-xl border border-[var(--color-border)] shadow-sm w-fit">
+            <div className="flex gap-4 items-center flex-col md:flex-row">
+              <div className="grid md:grid-cols-3 gap-6 items-center bg-[rgba(15,23,42,0.95)] p-4 rounded-2xl border border-[rgba(148,163,184,0.6)] shadow-[0_16px_45px_rgba(15,23,42,0.9)] w-fit">
                 {/* --- SWITCH: z człowiekiem --- */}
                 <div className="flex items-center gap-3">
                   <Switch
@@ -250,7 +250,7 @@ export default function GeneratorForm() {
             </div>
 
             <Button
-              className="w-full mt-2"
+              className="w-full mt-4 h-12 md:h-14 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] text-primary-foreground font-semibold shadow-[0_18px_50px_rgba(236,72,153,0.7)] hover:opacity-95"
               onClick={handleGenerate}
               disabled={loading}
             >
@@ -266,7 +266,7 @@ export default function GeneratorForm() {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 rounded-xl"
             style={{
-              backgroundColor: "rgba(26, 26, 26, 0.85)", // kolor-foreground / lekko transparentny
+              backgroundColor: "rgba(14, 18, 51, 0.85)", // kolor-foreground / lekko transparentny
               backdropFilter: "blur(6px)",
             }}
           >
@@ -369,7 +369,7 @@ export default function GeneratorForm() {
                   setSelected(v);
                   setCaption(variants[v].postDescription ?? "");
                 }}
-                className="cursor-pointer bg-white/5 hover:bg-white/10 transition border-white/10"
+                className="cursor-pointer bg-[rgba(15,23,42,0.9)]/90 hover:bg-[rgba(15,23,42,0.98)] transition border border-[rgba(148,163,184,0.45)] hover:border-[var(--color-primary)] shadow-[0_18px_50px_rgba(15,23,42,0.9)]"
               >
                 <CardContent className="p-3 space-y-3 flex flex-col items-center">
                   <img

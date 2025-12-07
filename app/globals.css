@@ -2,29 +2,47 @@
 @import "tw-animate-css";
 
 @theme inline {
-  --color-background: #efeee7;
-  --color-foreground: #1a1a1a;
+  /* Główne tło – głęboki niebieski jak na grafice */
+  --color-background: #020617;
 
-  --color-muted: #e7e5df;
-  --color-muted-foreground: #6a6a6a;
+  /* Podstawowy kolor tekstu – prawie biały */
+  --color-foreground: #f9fafb;
 
-  --color-border: #dcd9d2;
-  --color-input: #dcd9d2;
+  /* Delikatne jasne tony (karty, tła elementów) w stronę lawendy */
+  --color-muted: #1f2937;
+  --color-muted-foreground: #9ca3af;
 
-  --color-primary: #8aad7d;
+  /* Obrysy w chłodnym, lekko niebieskim odcieniu */
+  --color-border: #334155;
+  --color-input: #334155;
+
+  /* Główny akcent – różowo‑fioletowy jak w okręgu na grafice */
+  --color-primary: #e879f9;
   --color-primary-foreground: #ffffff;
-  --color-primary-hover: #769b69;
+  --color-primary-hover: #c4b5fd;
 
-  --color-accent: #e7e5df;
-  --color-accent-foreground: #1a1a1a;
+  /* Dodatkowy akcent – jaśniejsze, pastelowe róż/fiolet */
+  --color-accent: #f9a8d4;
+  --color-accent-foreground: #020617;
 
   --color-destructive: #ef4444;
   --color-destructive-foreground: #ffffff;
 
+  /* Promień zaokrągleń komponentów */
   --radius: 0.75rem;
 
-  --color-popover: #ffffff;
-  --color-popover-foreground: #1a1a1a;
+  /* Tło popoverów z lekką przezroczystością pod gradient */
+  --color-popover: rgba(15, 23, 42, 0.96);
+  --color-popover-foreground: #f9fafb;
+
+  /* Główny gradient tła – różowy okrąg na granatowym tle */
+  --background-main: radial-gradient(
+    circle at center,
+    #f9a8ff 0%,
+    #c084fc 20%,
+    #4f46e5 50%,
+    #020617 100%
+  );
 }
 
 @layer base {
@@ -33,17 +51,22 @@
   }
 
   body {
-    background: var(--color-background);
+    background: var(--background-main);
     color: var(--color-foreground);
     font-family: Inter, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   .grid-bg {
-    position: absolute;
+    top: 0;
+    left: 0;
+    position: fixed;
     inset: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    background-image: linear-gradient(
+        rgba(148, 163, 184, 0.1) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
     background-size: 50px 50px;
     pointer-events: none;
     z-index: 0;

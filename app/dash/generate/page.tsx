@@ -16,14 +16,14 @@ export default function GeneratePage() {
           transition={{ duration: 0.7 }}
           className="relative z-10 mt-20 w-full max-w-7xl"
         >
-          <Card className="bg-white/70 backdrop-blur-xl shadow-xl border rounded-2xl">
+          <Card className="rounded-3xl bg-[rgba(15,23,42,0.96)]/95 backdrop-blur-2xl border border-[rgba(148,163,184,0.45)] shadow-[0_26px_70px_rgba(15,23,42,0.9)]">
             <CardHeader>
-              <CardTitle className="text-center text-2xl font-semibold">
+              <CardTitle className="text-center text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
                 Generator kreacji reklamowej
               </CardTitle>
             </CardHeader>
 
-            <CardContent className="p-8">
+            <CardContent className="p-6 md:p-8">
               <GeneratorForm />
             </CardContent>
           </Card>

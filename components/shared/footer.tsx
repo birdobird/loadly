@@ -3,24 +3,24 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { Facebook, Instagram } from "lucide-react";
+import { Star, Instagram } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-[var(--color-border)] bg-white/70 backdrop-blur">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer className="w-full border-t border-[var(--color-border)]/70 bg-[rgba(15,23,42,0.9)] backdrop-blur-xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-14 items-start">
           {/* LOGO + DESC */}
           <div className="space-y-4">
             <Image
-              src="/logo.png"
+              src="/logo2.png"
               alt="Loadly Logo"
               width={80}
               height={80}
-              className="select-none"
+              className="select-none drop-shadow-[0_0_25px_rgba(248,250,252,0.45)]"
             />
 
-            <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+            <p className="text-sm text-muted-foreground/80 max-w-xs leading-relaxed">
               Loadly to inteligentny generator kreacji reklamowych — AI generuje
               grafikę, tekst i CTA, a Ty publikujesz jednym kliknięciem.
             </p>
@@ -28,7 +28,9 @@ export default function Footer() {
 
           {/* COLUMN 1 */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">Produkt</h4>
+            <h4 className="text-sm font-semibold text-foreground tracking-wide uppercase/relaxed text-[11px]">
+              Produkt
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
@@ -48,10 +50,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/dashboard"
+                  href="/dash/generate"
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  Panel użytkownika
+                  Generuj reklamę
                 </Link>
               </li>
             </ul>
@@ -59,7 +61,9 @@ export default function Footer() {
 
           {/* COLUMN 2 */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">Wsparcie</h4>
+            <h4 className="text-sm font-semibold text-foreground tracking-wide uppercase/relaxed text-[11px]">
+              Wsparcie
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
@@ -82,15 +86,15 @@ export default function Footer() {
 
           {/* SOCIALS */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">
+            <h4 className="text-sm font-semibold text-foreground tracking-wide uppercase/relaxed text-[11px]">
               Social media
             </h4>
             <ul className="space-y-3 text-sm">
               <li>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/loadly__/"
                   target="_blank"
-                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Instagram className="w-4 h-4" /> Instagram
                 </a>
@@ -98,11 +102,11 @@ export default function Footer() {
 
               <li>
                 <a
-                  href="https://facebook.com"
+                  href="https://www.tiktok.com/@loadly.pl"
                   target="_blank"
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                 >
-                  <Facebook className="w-4 h-4" /> Facebook
+                  <Star className="w-4 h-4" /> Tiktok
                 </a>
               </li>
             </ul>
@@ -110,9 +114,9 @@ export default function Footer() {
         </div>
 
         {/* BOTTOM BAR */}
-        <Separator className="my-10" />
+        <Separator className="my-8 bg-[rgba(148,163,184,0.25)]" />
 
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs sm:text-sm text-muted-foreground/80">
           <p>
             © {new Date().getFullYear()} Loadly. Wszystkie prawa zastrzeżone.
           </p>
@@ -123,9 +127,6 @@ export default function Footer() {
             </Link>
             <Link href="/terms" className="hover:text-foreground">
               Regulamin
-            </Link>
-            <Link href="/contact" className="hover:text-foreground">
-              Kontakt
             </Link>
           </div>
         </div>

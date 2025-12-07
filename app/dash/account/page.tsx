@@ -41,12 +41,16 @@ export default function AccountPage() {
     <div className="w-full flex justify-center pt-28 pb-20 px-4">
       <div className="w-full max-w-6xl space-y-12">
         {/* HEADER */}
-        <h1 className="text-4xl font-semibold text-center">Twoje konto</h1>
+        <h1 className="text-4xl md:text-5xl font-semibold text-center text-foreground tracking-tight">
+          Twoje konto
+        </h1>
 
         {/* USER CARD */}
-        <Card className="bg-white/60 backdrop-blur border border-[var(--color-border)] shadow-xl rounded-2xl">
+        <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/95 backdrop-blur-2xl border border-[rgba(148,163,184,0.45)] shadow-[0_20px_55px_rgba(15,23,42,0.9)]">
           <CardHeader>
-            <CardTitle className="text-lg">Dane użytkownika</CardTitle>
+            <CardTitle className="text-lg font-semibold text-foreground">
+              Dane użytkownika
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex items-center gap-6">
             <Image
@@ -58,11 +62,11 @@ export default function AccountPage() {
             />
 
             <div className="space-y-1">
-              <div className="font-medium">{email}</div>
-              <div className="text-sm opacity-70">
+              <div className="font-medium text-foreground">{email}</div>
+              <div className="text-sm text-muted-foreground">
                 Plan: <span className="font-medium capitalize">{plan}</span>
               </div>
-              <div className="text-sm opacity-70">
+              <div className="text-sm text-muted-foreground">
                 Pozostałe kreacje:{" "}
                 <span className="font-medium">{credits}</span>
               </div>
@@ -71,16 +75,20 @@ export default function AccountPage() {
         </Card>
 
         {/* SUBSCRIPTION CARD */}
-        <Card className="bg-white/60 backdrop-blur border border-[var(--color-border)] shadow-xl rounded-2xl">
+        <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/95 backdrop-blur-2xl border border-[rgba(148,163,184,0.45)] shadow-[0_20px_55px_rgba(15,23,42,0.9)]">
           <CardHeader>
-            <CardTitle className="text-lg">Subskrypcja</CardTitle>
+            <CardTitle className="text-lg font-semibold text-foreground">
+              Subskrypcja
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Active plan */}
-            <div className="flex items-center justify-between border p-4 rounded-xl bg-white/70">
+            <div className="flex items-center justify-between border border-[rgba(148,163,184,0.5)] p-4 rounded-xl bg-[rgba(15,23,42,0.9)]">
               <div>
-                <div className="font-semibold capitalize">{plan}</div>
-                <div className="text-sm opacity-70">
+                <div className="font-semibold capitalize text-foreground">
+                  {plan}
+                </div>
+                <div className="text-sm text-muted-foreground">
                   {plan === "free"
                     ? "Darmowe konto — 1 kreacja"
                     : plan === "premium"
@@ -107,7 +115,7 @@ export default function AccountPage() {
             {/* Upgrade */}
             {plan === "free" && (
               <Button
-                className="w-full h-12 text-lg"
+                className="w-full h-12 text-lg rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] text-primary-foreground font-semibold shadow-[0_18px_50px_rgba(236,72,153,0.7)] hover:opacity-95"
                 onClick={() => (window.location.href = "/pricing")}
               >
                 Kup subskrypcję
@@ -117,15 +125,17 @@ export default function AccountPage() {
         </Card>
 
         {/* META CONNECTION CARD */}
-        <Card className="bg-white/60 backdrop-blur border border-[var(--color-border)] shadow-xl rounded-2xl">
+        <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/95 backdrop-blur-2xl border border-[rgba(148,163,184,0.45)] shadow-[0_20px_55px_rgba(15,23,42,0.9)]">
           <CardHeader>
-            <CardTitle className="text-lg">Połączenia Meta</CardTitle>
+            <CardTitle className="text-lg font-semibold text-foreground">
+              Połączenia Meta
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-xl bg-white/70">
+            <div className="flex items-center justify-between p-4 border border-[rgba(148,163,184,0.5)] rounded-xl bg-[rgba(15,23,42,0.9)]">
               <div>
-                <div className="font-semibold">Facebook</div>
-                <div className="text-sm opacity-70">
+                <div className="font-semibold text-foreground">Facebook</div>
+                <div className="text-sm text-muted-foreground">
                   {facebook ? "Połączono" : "Nie połączono"}
                 </div>
               </div>
@@ -137,16 +147,16 @@ export default function AccountPage() {
               </Button>
             </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-xl bg-white/70">
+            <div className="flex items-center justify-between p-4 border border-[rgba(148,163,184,0.5)] rounded-xl bg-[rgba(15,23,42,0.9)]">
               <div>
-                <div className="font-semibold">Instagram</div>
-                <div className="text-sm opacity-70">
+                <div className="font-semibold text-foreground">Instagram</div>
+                <div className="text-sm text-muted-foreground">
                   {instagram ? "Połączono" : "Nie połączono"}
                 </div>
               </div>
               <Button
                 variant="outline"
-                className="border-pink-500 text-pink-500 hover:bg-pink-50"
+                className="border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[rgba(236,72,153,0.12)]"
                 onClick={() => (window.location.href = "/connect/instagram")}
               >
                 {instagram ? "Zmień" : "Połącz"}

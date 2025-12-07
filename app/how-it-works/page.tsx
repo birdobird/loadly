@@ -9,9 +9,8 @@ import { Button } from "@/components/ui/button";
 export default function HowItWorks() {
   return (
     <main className="relative flex flex-col items-center pb-32 pt-32">
-
       {/* GRID BACKGROUND */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
+      <div className="grid-bg" />
 
       {/* HEADER */}
       <section className="relative z-10 text-center max-w-3xl px-6">
@@ -36,17 +35,16 @@ export default function HowItWorks() {
 
       {/* STEPS */}
       <section className="relative z-10 mt-24 w-full max-w-6xl px-6">
-        <div className="grid md:grid-cols-3 gap-10">
-
+        <div className="grid md:grid-cols-3 gap-8 md:gap-10">
           {/* 1 */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="relative"
           >
-            <Card className="rounded-2xl bg-white/70 backdrop-blur border shadow-xl">
+            <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/90 backdrop-blur-xl border border-[rgba(148,163,184,0.5)] shadow-[0_18px_45px_rgba(15,23,42,0.6)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(15,23,42,0.9)]">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-xl">
+                <CardTitle className="flex items-center gap-3 text-xl text-foreground">
                   <Link2 className="w-6 h-6 text-primary" />
                   1. Wklej link
                 </CardTitle>
@@ -65,9 +63,9 @@ export default function HowItWorks() {
             transition={{ delay: 0.15 }}
             className="relative"
           >
-            <Card className="rounded-2xl bg-white/70 backdrop-blur border shadow-xl">
+            <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/90 backdrop-blur-xl border border-[rgba(148,163,184,0.5)] shadow-[0_18px_45px_rgba(15,23,42,0.6)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(15,23,42,0.9)]">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-xl">
+                <CardTitle className="flex items-center gap-3 text-xl text-foreground">
                   <Img className="w-6 h-6 text-primary" />
                   2. AI generuje kreacje
                 </CardTitle>
@@ -86,9 +84,9 @@ export default function HowItWorks() {
             transition={{ delay: 0.25 }}
             className="relative"
           >
-            <Card className="rounded-2xl bg-white/70 backdrop-blur border shadow-xl">
+            <Card className="rounded-2xl bg-[rgba(15,23,42,0.9)]/90 backdrop-blur-xl border border-[rgba(148,163,184,0.5)] shadow-[0_18px_45px_rgba(15,23,42,0.6)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(15,23,42,0.9)]">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-xl">
+                <CardTitle className="flex items-center gap-3 text-xl text-foreground">
                   <UploadCloud className="w-6 h-6 text-primary" />
                   3. Publikujesz 1 kliknięciem
                 </CardTitle>
@@ -124,7 +122,7 @@ export default function HowItWorks() {
               className="flex items-start gap-4"
             >
               <CheckCircle className="w-6 h-6 text-primary flex-shrink-0" />
-              <p className="text-muted-foreground">{step}</p>
+              <p className="text-foreground">{step}</p>
             </motion.div>
           ))}
         </div>
