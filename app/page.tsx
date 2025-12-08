@@ -32,7 +32,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="text-5xl md:text-6xl font-bold leading-tight text-foreground"
         >
-          Stwórz reklamę w <span className="text-primary">2 minuty</span>
+          Stwórz reklamę w <span className="text-primary">1 MINUTĘ</span>
         </motion.h1>
 
         <motion.p

@@ -133,7 +133,7 @@ export default function ConnectPage() {
           </Button>
         </Link>
         <p className="mt-3 text-muted-foreground text-sm">
-          Gotowe w mniej niż 2 minuty.
+          Gotowe w mniej niż 1 MINUTĘ.
         </p>
       </section>
     </main>
