@@ -31,7 +31,7 @@ export default function NotFound() {
         </p>
 
         {/* CARD */}
-        <div className="p-6 rounded-2xl border border-[var(--color-border)] bg-white/60 backdrop-blur-md shadow-lg">
+        <div className="p-6 rounded-2xl border border-[var(--color-border)] bg-black/50 backdrop-blur-md shadow-lg">
           <p className="text-[var(--color-foreground)] font-medium mb-4">
             Chcesz wrócić na stronę główną?
           </p>

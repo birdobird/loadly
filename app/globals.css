@@ -38,8 +38,8 @@
   /* Główny gradient tła – różowy okrąg na granatowym tle */
   --background-main: radial-gradient(
     circle at center,
-    #f9a8ff 0%,
-    #c084fc 20%,
+    #b854bf 0%,
+    #7f6ce7 20%,
     #4f46e5 50%,
     #020617 100%
   );

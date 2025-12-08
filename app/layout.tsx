@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: "/logo2.png",
         width: 1200,
         height: 630,
         alt: "Loadly | Generator reklam",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     title: "Loadly | Generator reklam",
     description:
       "Wklej link, wygeneruj i opublikuj reklamę na FB/IG jednym kliknięciem.",
-    images: ["/og-image.png"],
+    images: ["/logo2.png"],
   },
 
   robots: {

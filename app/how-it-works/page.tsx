@@ -26,7 +26,7 @@ export default function HowItWorks() {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-4 text-lg text-muted-foreground"
+          className="mt-4 text-lg text-frontend"
         >
           Loadly przekształca zwykły link produktu w gotową reklamę — obraz,
           tekst, CTA i format idealny pod FB/IG.
