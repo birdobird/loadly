@@ -10,7 +10,6 @@ import { findProductImages } from "@/lib/scrape-image";
 import { findStoreLogo } from "@/lib/scrape-logo";
 import { generateText } from "./_lib/generate-text";
 import { generateImage } from "./_lib/generate-image";
-import { checkImageText } from "./_lib/check-image-text";
 
 async function verifyTurnstile(token: string) {
   const res = await fetch(
@@ -143,15 +142,7 @@ export async function POST(req: NextRequest) {
           logoInline,
         });
 
-        const expectedText = `${text.headline ?? ""}\n${
-          text.postDescription ?? ""
-        }`.trim();
-        const safeImage = image || "";
-        const imageTextCheck = safeImage
-          ? await checkImageText(safeImage, expectedText || undefined)
-          : null;
-
-        variants[key] = { ...text, image: safeImage || image, imageTextCheck };
+        variants[key] = { ...text, image };
       })
     );
 
