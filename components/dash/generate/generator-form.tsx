@@ -286,7 +286,7 @@ export default function GeneratorForm() {
                   size="sm"
                   variant="outline"
                   onClick={handleGenerateContext}
-                  disabled={contextLoading || !imageUrl}
+                  disabled={contextLoading || !url}
                   className="text-xs h-7 px-2"
                 >
                   {contextLoading ? "Generuję…" : "Wygeneruj kontekst"}
