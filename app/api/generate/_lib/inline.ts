@@ -1,4 +1,17 @@
 export async function inline(url: string, maxRetries = 2) {
+  // Obsługa data URL (np. wgrane lokalnie zdjęcie zakodowane jako base64)
+  if (url.startsWith("data:")) {
+    const [header, data] = url.split(",", 2);
+    const mimeType = header.split(";")[0].replace("data:", "") || "image/png";
+
+    return {
+      inlineData: {
+        mimeType,
+        data,
+      },
+    };
+  }
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const res = await fetch(url, { cache: "no-store" });

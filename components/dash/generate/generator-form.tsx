@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,10 +42,61 @@ export default function GeneratorForm() {
   const [extraText, setExtraText] = useState("");
   const [useCartoon, setUseCartoon] = useState(false);
 
+  const [contextLoading, setContextLoading] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const [connected, setConnected] = useState({
     facebook: false,
     instagram: false,
   });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setImageUrl(result);
+        toast.success("Zdjęcie produktu zostało wczytane.");
+      }
+    };
+    reader.onerror = () => {
+      toast.error("Nie udało się wczytać pliku ze zdjęciem.");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleGenerateContext = async () => {
+    if (!url) {
+      toast.error("Podaj najpierw link do produktu, aby wygenerować kontekst.");
+      return;
+    }
+
+    try {
+      setContextLoading(true);
+      const res = await fetch("/api/generate-context", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Nie udało się wygenerować kontekstu.");
+      }
+
+      setExtraText(data.contextPrompt || "");
+      toast.success("Wygenerowano kontekst kreacji.");
+    } catch (err: any) {
+      toast.error(err.message || "Nie udało się wygenerować kontekstu.");
+    } finally {
+      setContextLoading(false);
+    }
+  };
 
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY!;
 
@@ -183,7 +234,6 @@ export default function GeneratorForm() {
               Kreacje A/B z produktem
             </CardTitle>
           </CardHeader>
-
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-3">
               <Input
@@ -191,19 +241,64 @@ export default function GeneratorForm() {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
-              <Input
-                placeholder="Lub URL zdjęcia produktu"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-              />
+              <div className="space-y-2">
+                <Input
+                  placeholder="Lub URL zdjęcia produktu"
+                  value={
+                    imageUrl.startsWith("data:") ? "(wgrane zdjęcie)" : imageUrl
+                  }
+                  onChange={(e) => setImageUrl(e.target.value)}
+                />
+                <div className="flex items-center gap-3">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="h-8 px-3 text-xs hover:text-white"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    Wgraj zdjęcie
+                  </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <span className="text-xs opacity-70 truncate max-w-[180px]">
+                    {imageUrl.startsWith("data:")
+                      ? "Wybrane: zdjęcie produktu"
+                      : "Nie wybrano pliku"}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <Textarea
-              placeholder="Kontekst kampanii (np. Black Friday -40%, nowa kolekcja, limitowana edycja)…"
-              value={extraText}
-              onChange={(e) => setExtraText(e.target.value)}
-              className="text-sm bg-[rgba(15,23,42,0.9)] border-[var(--color-border)]"
-            />
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs opacity-80">
+                  Kontekst kreacji (np. Black Friday -40%, nowa kolekcja,
+                  use-case)…
+                </span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={handleGenerateContext}
+                  disabled={contextLoading || !imageUrl}
+                  className="text-xs h-7 px-2"
+                >
+                  {contextLoading ? "Generuję…" : "Wygeneruj kontekst"}
+                </Button>
+              </div>
+              <Textarea
+                placeholder="Kontekst kreacji (np. Black Friday -40%, nowa kolekcja, limitowana edycja)…"
+                value={extraText}
+                onChange={(e) => setExtraText(e.target.value)}
+                className="text-sm bg-[rgba(15,23,42,0.9)] border-[var(--color-border)]"
+              />
+            </div>
             <div className="flex gap-4 items-center flex-col md:flex-row">
               <div className="grid md:grid-cols-3 gap-6 items-center bg-[rgba(15,23,42,0.95)] p-4 rounded-2xl border border-[rgba(148,163,184,0.6)] shadow-[0_16px_45px_rgba(15,23,42,0.9)] w-fit">
                 {/* --- SWITCH: z człowiekiem --- */}

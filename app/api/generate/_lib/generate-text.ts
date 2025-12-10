@@ -13,7 +13,7 @@ Napisz treści w języku polskim, dynamiczne, naturalne i dopasowane do produktu
 Dane o produkcie:
 ${JSON.stringify(context)}
 
-Dodatkowy kontekst kampanii:
+Dodatkowy kontekst kreacji:
 "${extraText || "brak"}"
 
 Wygeneruj WERSJĘ: ${key === "A" ? "emocjonalną" : "sprzedażową"}
